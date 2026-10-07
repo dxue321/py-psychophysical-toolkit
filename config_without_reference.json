@@ -1,0 +1,31 @@
+{
+  "_comment": "Paired comparison WITHOUT a reference image (two candidates side by side). Keys starting with '_' are ignored. Run: python experiment.py --config config_without_reference.json",
+
+  "root": "demo_images/methods",
+  "exclude": [],
+  "reference": null,
+
+  "question": "Which image has better visual quality?",
+  "instructions": "instructions_example.txt",
+  "adapt": 60,
+
+  "repeats": 1,
+  "n_trials": null,
+  "seed": null,
+
+  "fixation": 0.5,
+  "duration": 0,
+  "iti": 0.3,
+  "break_every": 50,
+  "show_progress": true,
+  "mouse": false,
+
+  "fullscreen": true,
+  "window": [1600, 900],
+  "bg": [128, 128, 128],
+  "fg": [230, 230, 230],
+  "gap": 0.03,
+  "upscale": false,
+
+  "out_dir": "results"
+}

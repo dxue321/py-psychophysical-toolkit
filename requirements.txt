@@ -1,0 +1,6 @@
+pygame>=2.1
+numpy>=1.22
+scipy>=1.9
+pandas>=1.5
+matplotlib>=3.6
+pillow>=9.0

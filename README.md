@@ -129,7 +129,12 @@ python experiment.py --config config/config_with_reference.json
 
 Flow: enter name → confirm save code → instructions (space to continue) → light adaptation → trials (fixation → images → response) → done.
 
-With `mode: all` and a reference image, the layout is two rows: the reference centered on its own row, with every candidate side by side in a row below it.
+With `mode: all` and a reference image, the layout is two rows: the reference centered on its own row, with every candidate side by side in a row below it. Example trial screens (using the demo images), showing the difference between the two designs:
+
+| `mode: pairwise` | `mode: all` |
+|---|---|
+| ![Pairwise trial: two candidates with the reference in the middle](assets/screenshot_pairwise.png) | ![All-at-once trial: the reference centered above every candidate](assets/screenshot_all.png) |
+| two candidates per trial, reference between them | every candidate at once, reference on its own row above |
 
 **Keys (`mode: pairwise`):** `←`/`F` = left, `→`/`J` = right, `ESC` = quit anytime.
 **Keys (`mode: all`):** `1`–`9` = pick the image under that number, `ESC` = quit anytime. More than 9 methods requires `--mouse` (digits can only address 9 positions); either way, with `mouse: true` you can also click any image to choose it.
@@ -166,6 +171,10 @@ Writes vector PDFs (+ PNG previews) sized for two-column conference templates, p
 | `fig_pairwise.pdf` | single column | Pairwise preference matrix |
 | `fig_ours_vs.pdf` | single column | Your method vs. each baseline |
 | `fig_overview.pdf` | full width | All three panels combined |
+
+Example `fig_overview` (PNG preview), from `simulate.py` demo data:
+
+![Example fig_overview: preference rate, perceptual scale, and pairwise preference panels](assets/paper_figure_example.png)
 
 Key flags: `--ours NAME` (highlight + generate `fig_ours_vs`), `--rename folder=label`, `--order A B C`, `--font serif|sans`, `--font-size N`.
 

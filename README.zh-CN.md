@@ -128,7 +128,12 @@ python experiment.py --config config/config_with_reference.json
 
 流程：输入姓名 → 确认保存代号 → 说明页（按空格继续）→ 环境光适应 → 试次（注视点 → 图像 → 作答）→ 结束。
 
-`mode: all` 且有参考图时，画面分两行：参考图单独居中显示在第一行，所有候选图并排显示在第二行。
+`mode: all` 且有参考图时，画面分两行：参考图单独居中显示在第一行，所有候选图并排显示在第二行。下面是用演示图像生成的实际试次截图，可以看出两种设计的区别：
+
+| `mode: pairwise` | `mode: all` |
+|---|---|
+| ![pairwise 试次：两张候选图，参考图在中间](assets/screenshot_pairwise.png) | ![all 试次：参考图单独一行居中，候选图并排在下面](assets/screenshot_all.png) |
+| 每次只比较两种方法，参考图在中间 | 所有方法一次性显示，参考图单独一行居中 |
 
 **按键（`mode: pairwise`）：** `←`/`F` = 选左边，`→`/`J` = 选右边，`ESC` = 随时退出。
 **按键（`mode: all`）：** `1`–`9` = 选择对应数字下的图像，`ESC` = 随时退出。超过 9 种方法时必须开启 `--mouse`（数字键最多只能对应 9 个位置）；开启 `mouse: true` 后，两种模式下都可以直接点击图像作答。
@@ -165,6 +170,10 @@ python paper_figure.py --ours Ours --rename Blur="Gaussian blur" --order Ours BM
 | `fig_pairwise.pdf` | 单栏 | 两两偏好矩阵 |
 | `fig_ours_vs.pdf` | 单栏 | 你的方法 vs. 各对比方法 |
 | `fig_overview.pdf` | 通栏 | 以上三部分合并 |
+
+`fig_overview` 示例（PNG 预览），数据来自 `simulate.py` 生成的演示数据：
+
+![fig_overview 示例：被选率、感知量表、两两偏好三个面板](assets/paper_figure_example.png)
 
 常用参数：`--ours NAME`（高亮并生成 `fig_ours_vs`）、`--rename 文件夹=显示名`、`--order A B C`、`--font serif|sans`、`--font-size N`。
 

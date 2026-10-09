@@ -129,7 +129,12 @@ python experiment.py --config config/config_with_reference.json
 
 Flujo: nombre → confirmar código de guardado → instrucciones (espacio para continuar) → adaptación a la luz → ensayos (fijación → imágenes → respuesta) → fin.
 
-Con `mode: all` y una imagen de referencia, la disposición es de dos filas: la referencia centrada en su propia fila, con cada candidato lado a lado en una fila debajo.
+Con `mode: all` y una imagen de referencia, la disposición es de dos filas: la referencia centrada en su propia fila, con cada candidato lado a lado en una fila debajo. Capturas reales de un ensayo (usando las imágenes de demostración) que muestran la diferencia entre ambos diseños:
+
+| `mode: pairwise` | `mode: all` |
+|---|---|
+| ![Ensayo pairwise: dos candidatas con la referencia en medio](assets/screenshot_pairwise.png) | ![Ensayo all-at-once: la referencia centrada sobre cada candidata](assets/screenshot_all.png) |
+| dos candidatas por ensayo, referencia entre ellas | todas las candidatas a la vez, referencia en su propia fila arriba |
 
 **Teclas (`mode: pairwise`):** `←`/`F` = izquierda, `→`/`J` = derecha, `ESC` = salir en cualquier momento.
 **Teclas (`mode: all`):** `1`–`9` = elige la imagen bajo ese número, `ESC` = salir en cualquier momento. Con más de 9 métodos es obligatorio `--mouse` (las teclas numéricas solo llegan a 9 posiciones); con `mouse: true` también puedes hacer clic en cualquier imagen en ambos modos.
@@ -166,6 +171,10 @@ Genera PDFs vectoriales (+ vistas previas PNG) con el tamaño de plantillas de a
 | `fig_pairwise.pdf` | columna única | Matriz de preferencia por pares |
 | `fig_ours_vs.pdf` | columna única | Tu método frente a cada método base |
 | `fig_overview.pdf` | ancho completo | Los tres paneles combinados |
+
+Ejemplo de `fig_overview` (vista previa PNG), con datos de demostración de `simulate.py`:
+
+![Ejemplo de fig_overview: tasa de preferencia, escala perceptual y preferencia por pares](assets/paper_figure_example.png)
 
 Opciones clave: `--ours NAME` (resalta y genera `fig_ours_vs`), `--rename carpeta=etiqueta`, `--order A B C`, `--font serif|sans`, `--font-size N`.
 

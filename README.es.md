@@ -6,7 +6,12 @@
 
 Una herramienta en Python para hacer **estudios de usuario** de elección forzada que comparan métodos de procesamiento de imágenes, con un flujo similar a Psychtoolbox.
 
-- Dos diseños de ensayo, elegidos con `mode` en la configuración: **pairwise** (2AFC) muestra dos resultados de método emparejados al azar, lado a lado (izquierda/derecha aleatorio), con una imagen de referencia opcional entre ellos; **all** (N-AFC) muestra el resultado de cada método para una escena a la vez en una fila, y el sujeto elige el mejor de todos — con una imagen de referencia opcional centrada en su propia fila encima. Es una prueba ciega — nunca se muestran los nombres de los métodos.
+- Dos diseños de ensayo, elegidos con `mode` en la configuración: 
+
+**pairwise** (2AFC) muestra dos resultados de método emparejados al azar, lado a lado (izquierda/derecha aleatorio), con una imagen de referencia opcional entre ellos; 
+
+**all** (N-AFC) muestra el resultado de cada método para una escena a la vez en una fila, y el sujeto elige el mejor de todos — con una imagen de referencia opcional centrada en su propia fila encima. Es una prueba ciega — nunca se muestran los nombres de los métodos.
+
 - Varios sujetos pueden participar uno tras otro; los resultados de cada uno se guardan en su propio archivo y nunca se sobrescriben.
 - Análisis incluido: agrega los datos de todos los sujetos, aplica pruebas estadísticas y genera gráficos.
 - Puede exportar figuras vectoriales con el tamaño de plantillas de artículos a dos columnas, junto con fragmentos de LaTeX listos para pegar.
@@ -16,7 +21,8 @@ Una herramienta en Python para hacer **estudios de usuario** de elección forzad
 ```bash
 pip install -r requirements.txt
 python make_demo_data.py                                     # genera imágenes de demostración
-python experiment.py --config config_with_reference.json --adapt 60
+python experiment.py --config config/config_with_reference.json --adapt 60   # pairwise (2AFC)
+python experiment.py --config config/config_all_methods.json --adapt 60      # all-at-once (N-AFC)
 python analysis.py                                           # resultados -> analysis/
 python paper_figure.py --ours Ours                            # figuras -> paper_figures/
 ```
@@ -32,8 +38,8 @@ Requiere Python 3.9 o superior.
 | `paper_figure.py` | Exporta figuras vectoriales para el artículo y código LaTeX |
 | `make_demo_data.py` | Genera imágenes de demostración para probar la herramienta |
 | `simulate.py` | Simula datos de sujetos, para probar el flujo o estimar el tamaño de muestra |
-| `config_with_reference.json` / `config_without_reference.json` | Configuraciones de ejemplo pairwise (con / sin imagen de referencia) |
-| `config_all_methods.json` | Configuración de ejemplo para el diseño all-at-once (N-AFC) |
+| `config/config_with_reference.json` / `config/config_without_reference.json` | Configuraciones de ejemplo pairwise (con / sin imagen de referencia) |
+| `config/config_all_methods.json` | Configuración de ejemplo para el diseño all-at-once (N-AFC) |
 
 Carpetas de salida (se crean solas, excluidas de git): `results/`, `analysis/`, `paper_figures/`.
 
@@ -55,7 +61,7 @@ La coincidencia ignora la extensión (`001.png` = `001.jpg`). Una escena que fal
 
 ## Paso 2 — Escribe un archivo de configuración
 
-Copia `config_with_reference.json` (muestra "candidata | referencia | candidata"), `config_without_reference.json` (solo dos candidatas, sin referencia), o `config_all_methods.json` (todos los métodos a la vez — ver Paso 4) y edítalo. Cualquier opción de línea de comandos sobrescribe la clave correspondiente de la configuración, p. ej. `--adapt 5`.
+Copia `config/config_with_reference.json` (muestra "candidata | referencia | candidata"), `config/config_without_reference.json` (solo dos candidatas, sin referencia), o `config/config_all_methods.json` (todos los métodos a la vez — ver Paso 4) y edítalo. Cualquier opción de línea de comandos sobrescribe la clave correspondiente de la configuración, p. ej. `--adapt 5`.
 
 Claves más usadas:
 
@@ -107,8 +113,8 @@ El texto de instrucciones admite los marcadores: `{question}`, `{n_trials}`, `{b
 ## Paso 3 — Ejecución de prueba
 
 ```bash
-python experiment.py --config config_with_reference.json --dry-run     # revisa carpetas y nº de ensayos, sin ventana
-python experiment.py --config config_with_reference.json --adapt 5 --n-trials 10   # pruébalo tú mismo
+python experiment.py --config config/config_with_reference.json --dry-run     # revisa carpetas y nº de ensayos, sin ventana
+python experiment.py --config config/config_with_reference.json --adapt 5 --n-trials 10   # pruébalo tú mismo
 ```
 
 El número de ensayos impreso depende de `mode`: pairwise es `escenas × M(M−1)/2 × repeticiones`, all es solo `escenas × repeticiones` (ver Consejos de diseño). Los resultados de la prueba también se guardan en `results/` — bórralos antes del experimento real.
@@ -118,7 +124,7 @@ El número de ensayos impreso depende de `mode`: pairwise es `escenas × M(M−1
 Ejecútalo una vez por sujeto:
 
 ```bash
-python experiment.py --config config_with_reference.json
+python experiment.py --config config/config_with_reference.json
 ```
 
 Flujo: nombre → confirmar código de guardado → instrucciones (espacio para continuar) → adaptación a la luz → ensayos (fijación → imágenes → respuesta) → fin.
@@ -187,7 +193,7 @@ Una fila por ensayo, un CSV por sujeto. El esquema depende de `mode`:
 | `chosen` | El método ganador |
 | `position`, `rt`, `reference`, `scale`, `timestamp` | Posición (base 1) de `chosen` dentro de `shown`, tiempo de respuesta, si había referencia, escala de visualización, hora |
 
-Cualquier herramienta que produzca alguno de estos dos conjuntos de columnas (p. ej. PsychoPy) funciona con `analysis.py` / `paper_figure.py`, que detectan el formato por archivo — el mínimo requerido es `subject`, `chosen`, y `not_chosen` o `shown`. Ambos tipos de archivo pueden convivir en la misma carpeta `results/`; `analysis.py` expande cada ensayo de modo all en una comparación por pares por cada candidato perdedor antes de analizarlo (válido bajo independencia de alternativas irrelevantes, IIA).
+Cualquier herramienta que produzca alguno de estos dos conjuntos de columnas (p. ej. PsychoPy) funciona con `analysis.py` / `paper_figure.py`, que detectan el formato por archivo — el mínimo requerido es `subject`, `chosen`, y `not_chosen` o `shown`. Ambos tipos de archivo pueden convivir en la misma carpeta `results/`; `analysis.py` expande cada ensayo de modo all en una comparación por pares por cada candidato perdedor antes de analizarlo (válido bajo independencia de alternativas irrelevantes, IIA). Si los dos diseños pertenecen a dos estudios distintos y no a un mismo estudio que compara ambos, usa un `out_dir` diferente para cada uno — separados por estudio, no por `mode` — para que datos no relacionados nunca se mezclen por accidente en el mismo análisis.
 
 ## Estadística, en breve
 

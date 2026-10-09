@@ -6,7 +6,11 @@
 
 用 Python 实现的强制选择**主观评价（user study）**工具，流程类似 Psychtoolbox，专门用来比较图像处理方法。
 
-- 两种试次设计，由配置中的 `mode` 选择：**pairwise**（两两比较，2AFC）每次随机抽取两种方法的结果，左右随机并排显示，可选在中间加参考图；**all**（全部对比，N-AFC）每次把一个场景下所有方法的结果一次性并排显示在一行，受试者从中选出最好的一张，可选在上方单独一行居中显示参考图。方法名不会显示，是盲测。
+- 两种试次设计，由配置中的 `mode` 选择：
+
+**pairwise**（两两比较，2AFC）每次随机抽取两种方法的结果，左右随机并排显示，可选在中间加参考图；
+**all**（全部对比，N-AFC）每次把一个场景下所有方法的结果一次性并排显示在一行，受试者从中选出最好的一张，可选在上方单独一行居中显示参考图。方法名不会显示，是盲测。
+
 - 支持多名受试者依次参加，每人结果单独保存，不会互相覆盖。
 - 自带分析流程：汇总所有受试者数据，做统计检验并画图。
 - 可直接导出适合双栏论文模板的矢量图，并附带可粘贴的 LaTeX 代码。
@@ -16,7 +20,8 @@
 ```bash
 pip install -r requirements.txt
 python make_demo_data.py                                     # 生成演示图像
-python experiment.py --config config_with_reference.json --adapt 60
+python experiment.py --config config/config_with_reference.json --adapt 60   # 两两比较（2AFC）
+python experiment.py --config config/config_all_methods.json --adapt 60      # 全部对比（N-AFC）
 python analysis.py                                           # 结果 -> analysis/
 python paper_figure.py --ours Ours                            # 论文图 -> paper_figures/
 ```
@@ -32,8 +37,8 @@ python paper_figure.py --ours Ours                            # 论文图 -> pap
 | `paper_figure.py` | 导出论文用矢量图和 LaTeX 代码 |
 | `make_demo_data.py` | 生成演示图像，方便试用 |
 | `simulate.py` | 模拟受试者数据，用来测试流程或估算所需人数 |
-| `config_with_reference.json` / `config_without_reference.json` | 两两比较配置样例（有 / 无参考图） |
-| `config_all_methods.json` | 全部对比（N-AFC）配置样例 |
+| `config/config_with_reference.json` / `config/config_without_reference.json` | 两两比较配置样例（有 / 无参考图） |
+| `config/config_all_methods.json` | 全部对比（N-AFC）配置样例 |
 
 自动生成的输出文件夹（已加入 `.gitignore`）：`results/`、`analysis/`、`paper_figures/`。
 
@@ -55,7 +60,7 @@ my_study/
 
 ## 第二步：编写配置文件
 
-复制 `config_with_reference.json`（排列为"候选图 | 参考图 | 候选图"）、`config_without_reference.json`（只有两张候选图，无参考），或 `config_all_methods.json`（一次显示所有方法，见第四步）并修改。命令行参数会覆盖配置文件里的同名设置，例如 `--adapt 5`。
+复制 `config/config_with_reference.json`（排列为"候选图 | 参考图 | 候选图"）、`config/config_without_reference.json`（只有两张候选图，无参考），或 `config/config_all_methods.json`（一次显示所有方法，见第四步）并修改。命令行参数会覆盖配置文件里的同名设置，例如 `--adapt 5`。
 
 常用的键：
 
@@ -107,8 +112,8 @@ my_study/
 ## 第三步：试运行
 
 ```bash
-python experiment.py --config config_with_reference.json --dry-run     # 检查文件夹和试次数，不开窗口
-python experiment.py --config config_with_reference.json --adapt 5 --n-trials 10   # 自己完整试一遍
+python experiment.py --config config/config_with_reference.json --dry-run     # 检查文件夹和试次数，不开窗口
+python experiment.py --config config/config_with_reference.json --adapt 5 --n-trials 10   # 自己完整试一遍
 ```
 
 打印的试次数取决于 `mode`：pairwise 是 `场景数 × M(M−1)/2 × 重复次数`，all 只是 `场景数 × 重复次数`（见实验设计建议）。试运行结果也会写进 `results/` —— 正式实验前请删除。
@@ -118,7 +123,7 @@ python experiment.py --config config_with_reference.json --adapt 5 --n-trials 10
 每名受试者运行一次：
 
 ```bash
-python experiment.py --config config_with_reference.json
+python experiment.py --config config/config_with_reference.json
 ```
 
 流程：输入姓名 → 确认保存代号 → 说明页（按空格继续）→ 环境光适应 → 试次（注视点 → 图像 → 作答）→ 结束。
@@ -187,7 +192,7 @@ LaTeX 中用 `\linewidth` / `\textwidth` 设置宽度 —— 图已经是这个�
 | `chosen` | 被选中的方法 |
 | `position`、`rt`、`reference`、`scale`、`timestamp` | `chosen` 在 `shown` 中的 1 起始位置、反应时、是否有参考图、显示缩放、作答时间 |
 
-只要列名匹配其中一种格式，用其他工具（如 PsychoPy）采集的数据也能用 `analysis.py` / `paper_figure.py` 分析（两种格式会自动按文件识别）；至少需要 `subject`、`chosen`，以及 `not_chosen` 或 `shown` 之一。两种格式的结果可以放在同一个 `results/` 文件夹里：`analysis.py` 会把每个 all 模式的试次展开成"获胜方法 vs. 每个落选方法"的两两比较，再一起分析（这在无关选项独立性，IIA 假设下是合理的）。
+只要列名匹配其中一种格式，用其他工具（如 PsychoPy）采集的数据也能用 `analysis.py` / `paper_figure.py` 分析（两种格式会自动按文件识别）；至少需要 `subject`、`chosen`，以及 `not_chosen` 或 `shown` 之一。两种格式的结果可以放在同一个 `results/` 文件夹里：`analysis.py` 会把每个 all 模式的试次展开成"获胜方法 vs. 每个落选方法"的两两比较，再一起分析（这在无关选项独立性，IIA 假设下是合理的）。如果两批数据其实是两个独立的研究（而不是同一个研究里想顺便比较两种设计），建议用不同的 `out_dir` 分开保存——按研究分，而不是按 `mode` 分，避免把不相关的数据不小心混进同一次分析。
 
 ## 统计方法简述
 

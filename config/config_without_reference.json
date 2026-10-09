@@ -1,5 +1,5 @@
 {
-  "_comment": "Paired comparison WITHOUT a reference image (two candidates side by side). Keys starting with '_' are ignored. Run: python experiment.py --config config_without_reference.json",
+  "_comment": "Paired comparison WITHOUT a reference image (two candidates side by side). Keys starting with '_' are ignored. Run: python experiment.py --config config/config_without_reference.json",
 
   "root": "demo_images/methods",
   "exclude": [],

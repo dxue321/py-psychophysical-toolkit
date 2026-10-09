@@ -1,5 +1,5 @@
 {
-  "_comment": "All-at-once (N-AFC) design: every method is shown at once for a scene, and the subject picks the single best one. Keys starting with '_' are ignored. Run: python experiment.py --config config_all_methods.json",
+  "_comment": "All-at-once (N-AFC) design: every method is shown at once for a scene, and the subject picks the single best one. Keys starting with '_' are ignored. Run: python experiment.py --config config/config_all_methods.json",
 
   "mode": "all",
 

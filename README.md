@@ -6,7 +6,12 @@
 
 A Python tool for running forced-choice **user studies** that compare image processing methods, with a workflow similar to Psychtoolbox.
 
-- Two trial designs, picked with `mode` in the config: **pairwise** (2AFC) shows two randomly-paired method results side by side (left/right randomized), with an optional reference image between them; **all** (N-AFC) shows every method's result for a scene at once in a row, and the subject picks the single best one — with an optional reference image centered on its own row above that. It's a blind test — method names are never shown.
+- Two trial designs, picked with `mode` in the config: 
+
+**pairwise** (2AFC) shows two randomly-paired method results side by side (left/right randomized), with an optional reference image between them; 
+
+**all** (N-AFC) shows every method's result for a scene at once in a row, and the subject picks the single best one — with an optional reference image centered on its own row above that. It's a blind test — method names are never shown.
+
 - Multiple subjects can run in sequence; each subject's results are saved to their own file and never overwritten.
 - Built-in analysis: aggregates all subjects, runs statistical tests, and plots results.
 - Can export vector figures sized for two-column conference paper templates, with matching LaTeX snippets.
@@ -16,7 +21,8 @@ A Python tool for running forced-choice **user studies** that compare image proc
 ```bash
 pip install -r requirements.txt
 python make_demo_data.py                                     # generate demo images
-python experiment.py --config config_with_reference.json --adapt 60
+python experiment.py --config config/config_with_reference.json --adapt 60   # pairwise (2AFC)
+python experiment.py --config config/config_all_methods.json --adapt 60      # all-at-once (N-AFC)
 python analysis.py                                           # results -> analysis/
 python paper_figure.py --ours Ours                            # paper figures -> paper_figures/
 ```
@@ -32,8 +38,8 @@ Requires Python 3.9+.
 | `paper_figure.py` | Exports paper-ready vector figures + LaTeX code |
 | `make_demo_data.py` | Generates demo images, for trying the tool out |
 | `simulate.py` | Simulates subject data, to test the pipeline or estimate sample size |
-| `config_with_reference.json` / `config_without_reference.json` | Example pairwise configs (with / without a reference image) |
-| `config_all_methods.json` | Example all-at-once (N-AFC) config |
+| `config/config_with_reference.json` / `config/config_without_reference.json` | Example pairwise configs (with / without a reference image) |
+| `config/config_all_methods.json` | Example all-at-once (N-AFC) config |
 
 Output folders (auto-created, git-ignored): `results/`, `analysis/`, `paper_figures/`.
 
@@ -55,7 +61,7 @@ Matching ignores the extension (`001.png` = `001.jpg`). A scene missing from any
 
 ## Step 2 — Write a config file
 
-Copy `config_with_reference.json` (shows "candidate | reference | candidate"), `config_without_reference.json` (just two candidates, no reference), or `config_all_methods.json` (every method at once — see Step 4) and edit it. Any CLI flag overrides the matching config key, e.g. `--adapt 5`.
+Copy `config/config_with_reference.json` (shows "candidate | reference | candidate"), `config/config_without_reference.json` (just two candidates, no reference), or `config/config_all_methods.json` (every method at once — see Step 4) and edit it. Any CLI flag overrides the matching config key, e.g. `--adapt 5`.
 
 Most useful keys:
 
@@ -107,8 +113,8 @@ The instructions text supports placeholders: `{question}`, `{n_trials}`, `{break
 ## Step 3 — Dry run
 
 ```bash
-python experiment.py --config config_with_reference.json --dry-run     # check folders & trial count, no window
-python experiment.py --config config_with_reference.json --adapt 5 --n-trials 10   # try it yourself
+python experiment.py --config config/config_with_reference.json --dry-run     # check folders & trial count, no window
+python experiment.py --config config/config_with_reference.json --adapt 5 --n-trials 10   # try it yourself
 ```
 
 The trial count printed depends on `mode`: pairwise is `scenes × M(M−1)/2 × repeats`, all is just `scenes × repeats` (see Design tips). Dry-run output also lands in `results/` — delete it before the real experiment.
@@ -118,7 +124,7 @@ The trial count printed depends on `mode`: pairwise is `scenes × M(M−1)/2 × 
 Run once per subject:
 
 ```bash
-python experiment.py --config config_with_reference.json
+python experiment.py --config config/config_with_reference.json
 ```
 
 Flow: enter name → confirm save code → instructions (space to continue) → light adaptation → trials (fixation → images → response) → done.
@@ -187,7 +193,7 @@ One row per trial, one CSV per subject. The schema depends on `mode`:
 | `chosen` | The winning method |
 | `position`, `rt`, `reference`, `scale`, `timestamp` | 1-based rank of `chosen` in `shown`, response time, had-reference flag, display scale, time |
 
-Any tool that produces either set of columns (e.g. PsychoPy) works with `analysis.py` / `paper_figure.py`, which detect the format per file — minimum required is `subject`, `chosen`, and either `not_chosen` or `shown`. Files of both kinds may sit in the same `results/` folder; `analysis.py` expands each all-mode trial into one pairwise comparison per losing candidate before analyzing it (valid under independence of irrelevant alternatives, IIA).
+Any tool that produces either set of columns (e.g. PsychoPy) works with `analysis.py` / `paper_figure.py`, which detect the format per file — minimum required is `subject`, `chosen`, and either `not_chosen` or `shown`. Files of both kinds may sit in the same `results/` folder; `analysis.py` expands each all-mode trial into one pairwise comparison per losing candidate before analyzing it (valid under independence of irrelevant alternatives, IIA). If the two designs belong to two separate studies rather than one study comparing both, use a different `out_dir` for each — split by study, not by `mode` — so unrelated data never gets pooled into the same analysis by accident.
 
 ## Statistics, briefly
 

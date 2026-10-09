@@ -1,0 +1,14 @@
+Instructions
+
+This experiment studies the perceived visual quality of different image processing methods. On each trial you will see two processed versions of the same image{ref_sentence}.{ref_hint}
+
+Compare the left and right images and choose:
+
+        {question}
+
+- Pay attention to details, edges, noise and color. The left/right position is random and says nothing about which method is better.
+- Always choose one of the two images. If they look about the same, go with your first impression.
+- Press LEFT or F to choose the left image, RIGHT or J to choose the right image.{mouse_sentence}
+- There are {n_trials} judgements in total, with a short break every {break_every} trials.
+
+Before the experiment starts there will be a gray screen; please use this time to adapt to the room lighting.

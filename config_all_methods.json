@@ -1,0 +1,33 @@
+{
+  "_comment": "All-at-once (N-AFC) design: every method is shown at once for a scene, and the subject picks the single best one. Keys starting with '_' are ignored. Run: python experiment.py --config config_all_methods.json",
+
+  "mode": "all",
+
+  "root": "demo_images/methods",
+  "exclude": [],
+  "reference": "demo_images/reference",
+
+  "question": "Which image is closest to the reference?",
+  "instructions": null,
+  "adapt": 60,
+
+  "repeats": 4,
+  "n_trials": null,
+  "seed": null,
+
+  "fixation": 0.5,
+  "duration": 0,
+  "iti": 0.3,
+  "break_every": 25,
+  "show_progress": true,
+  "mouse": true,
+
+  "fullscreen": true,
+  "window": [1600, 900],
+  "bg": [128, 128, 128],
+  "fg": [230, 230, 230],
+  "gap": 0.01,
+  "upscale": false,
+
+  "out_dir": "results"
+}
